@@ -22,14 +22,14 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        nav = CtkNavbar(master=self, default_frame=3)
-        a = customtkinter.CTkFrame(master=nav, fg_color="orange")
-        nav.add_frame(button_text="First", frame=a)
-        nav.add_frame(button_text="Second")
+        nav = CtkNavbar(master=self, default_frame=3, end_buttons_count=1)
+        nav.add_page(button_text="First")
+        nav.add_page(button_text="Second")
+
+        custom_frame = customtkinter.CTkFrame(master=nav, fg_color="orange", corner_radius=100)
+        nav.add_page(button_text="Third", frame=custom_frame)
 
         nav.grid(row=0, column=0, sticky="nsew")
-
-        nav.add_frame(button_text="Third")
 
 
         # nav.render()

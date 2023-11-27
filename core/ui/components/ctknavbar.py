@@ -1,20 +1,31 @@
+import math
+
 import customtkinter as ctk
 import random
 
-BASE_FG_COLOR = ("gray75", "gray25")
+BTN_ACTIVE_COLOR = ("gray75", "gray25")
+BTN_TEXT_COLOR = ("gray10", "gray90")
+BTN_HOVER_COLOR = ("gray70", "gray30")
+SIDEBAR_BTN_PADDINGS = 6
+
+# TODO
+"""
+2) add horizontal version
+"""
 
 
 class CtkNavbar(ctk.CTkFrame):
     def __init__(self,
                  master,
-                 sidebar_width=170,
                  auto_render=True,
+                 end_buttons_count=0,
                  default_frame=0,
                  **kwargs):
         super().__init__(master, **kwargs)
 
         self._default_frame = default_frame
         self._auto_render = auto_render
+        self._end_buttons_count = end_buttons_count
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -28,28 +39,29 @@ class CtkNavbar(ctk.CTkFrame):
         self.buttons_list = []
         self.frames_list = []
 
-    def add_frame(self, button_text: str, frame=None):
+    def add_page(self, button_text: str, btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None):
         btn_id = len(self.buttons_list)
-        btn = DefaultSidebarButton(master=self.sidebar_frame,
-                                   text=button_text,
-                                   command=lambda: self._render(btn_id))
-        self.buttons_list.append(btn)
 
+        if not btn:
+            btn = DefaultSidebarButton(master=self.sidebar_frame,
+                                       text=button_text,
+                                       command=lambda: self._render(btn_id))
         if not frame:
             frame = DefaultNavbarFrame(master=self)
 
+        self.buttons_list.append(btn)
         self.frames_list.append(frame)
 
         if self._auto_render:
             self._render()
 
-    def grid(self, **kwargs):
-        """
-        Render everything at the moment when the navigation block is added to the program
-        """
-        super().grid(**kwargs)
-        if self._auto_render:
-            self._render(btn_id=self._default_frame)
+    # def grid(self, **kwargs):
+    #     """
+    #     Render everything at the moment when the navigation block is added to the program
+    #     """
+    #     super().grid(**kwargs)
+    #     if self._auto_render:
+    #         self._render(btn_id=self._default_frame)
 
     def render(self):
         """
@@ -66,12 +78,21 @@ class CtkNavbar(ctk.CTkFrame):
 
         # draw all buttons
         for i, btn in enumerate(self.buttons_list):
-            btn.grid(row=i, column=0, padx=6, pady=3)
+            btn.grid(row=i,
+                     column=0,
+                     padx=SIDEBAR_BTN_PADDINGS,
+                     pady=SIDEBAR_BTN_PADDINGS if i == 0 else (0, SIDEBAR_BTN_PADDINGS), sticky="sew")
+
+            # stick the buttons to the end
+            if i == self._get_row_index_for_align_btn_end():
+                self.sidebar_frame.grid_rowconfigure(self._get_row_index_for_align_btn_end(), weight=1)
+            else:
+                self.sidebar_frame.grid_rowconfigure(i, weight=0)
 
         # set button color for selected button
         for i, btn in enumerate(self.buttons_list):
             if i == chosen_frame_id:
-                btn.configure(fg_color=BASE_FG_COLOR)
+                btn.configure(fg_color=BTN_ACTIVE_COLOR)
             else:
                 btn.configure(fg_color="transparent")
 
@@ -81,6 +102,12 @@ class CtkNavbar(ctk.CTkFrame):
                 frame.grid(row=0, column=1, sticky="nsew")
             else:
                 frame.grid_forget()
+
+    def _get_row_index_for_align_btn_end(self) -> int:
+        return 0 \
+            if (
+                len(self.buttons_list) - self._end_buttons_count < 0) \
+            else len(self.buttons_list) - self._end_buttons_count
 
 
 class DefaultSidebarButton(ctk.CTkButton):
@@ -98,8 +125,8 @@ class DefaultSidebarButton(ctk.CTkButton):
             border_spacing=5,
             text=text,
             fg_color="transparent",
-            text_color=("gray10", "gray90"),
-            hover_color=("gray70", "gray30"),
+            text_color=BTN_TEXT_COLOR,
+            hover_color=BTN_HOVER_COLOR,
             anchor="center",
             command=command
         )
@@ -111,6 +138,7 @@ class DefaultNavbarFrame(ctk.CTkFrame):
     It's created with corner_radius=0 and random background color
     (Use for prototype your app)
     """
+
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
         self.grid_rowconfigure(0, weight=1)
