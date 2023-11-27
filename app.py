@@ -29,7 +29,7 @@ class App(customtkinter.CTk):
 
         nav.grid(row=0, column=0, sticky="nsew")
 
-        nav.add_frame(button_text="Second")
+        nav.add_frame(button_text="Third")
 
 
         # nav.render()
