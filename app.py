@@ -1,7 +1,7 @@
 import os
 import customtkinter
 
-from core.ui.components.navbar import Navbar
+from core.ui.components.ctknavbar import CtkNavbar
 from core.settings import Settings
 
 PADDING = 20
@@ -22,13 +22,17 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        nav = Navbar(master=self)
+        nav = CtkNavbar(master=self, default_frame=3)
         a = customtkinter.CTkFrame(master=nav, fg_color="orange")
-        nav.add_frame(button_text="red", frame=a)
-        nav.add_frame(button_text="green")
-        nav.add_frame(button_text="blue")
+        nav.add_frame(button_text="First", frame=a)
+        nav.add_frame(button_text="Second")
 
         nav.grid(row=0, column=0, sticky="nsew")
+
+        nav.add_frame(button_text="Second")
+
+
+        # nav.render()
 
 
         # self.grid_rowconfigure(0, weight=1)
