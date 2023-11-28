@@ -6,6 +6,7 @@ Simple customtkinter todo app
 | ![alt](screenshots/1.png) | ![alt](screenshots/2.png) |
 
 # dev
+- [ ] add logo in CktNavbar
 - [ ] add new task
 - [ ] delete task
 - [ ] change task
