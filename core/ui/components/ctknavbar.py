@@ -10,6 +10,7 @@ SIDEBAR_BTN_PADDINGS = 6
 """
 2) add horizontal version
 3) fix button config
+4) insert new buttons under top buttons, do not touch end buttons
 """
 
 
