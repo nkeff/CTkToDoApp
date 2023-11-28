@@ -1,5 +1,3 @@
-import math
-
 import customtkinter as ctk
 import random
 
@@ -132,7 +130,7 @@ class CtkNavbar(ctk.CTkFrame):
 class DefaultSidebarButton(ctk.CTkButton):
     """
     Default sidebar button
-    If you want to use custom sidebar button, you can do it)
+    If you want to use custom sidebar button, you can do it
     """
 
     def __init__(self, master, text, command, **kwargs):
@@ -167,4 +165,4 @@ class DefaultNavbarFrame(ctk.CTkFrame):
 
     @staticmethod
     def _get_random_color() -> str:
-        return f"#{''.join([random.choice("123456789ABCDEF") for i in range(6)])}"
+        return f"#{''.join([random.choice("123456789ABCDEF") for _ in range(6)])}"
