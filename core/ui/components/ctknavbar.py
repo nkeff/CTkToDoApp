@@ -19,18 +19,20 @@ class CtkNavbar(ctk.CTkFrame):
                  master,
                  auto_render=True,
                  end_buttons_count=0,
-                 default_frame=0,
+                 default_page=0,
                  **kwargs):
         super().__init__(master, **kwargs)
 
-        self._default_frame = default_frame
+        self._active_page_id = default_page
         self._auto_render = auto_render
         self._end_buttons_count = end_buttons_count
+
+        self._is_it_already_rendered = False
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
+        self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.main_frame = ctk.CTkFrame(self, corner_radius=0)
 
         self.sidebar_frame.grid(row=0, column=0, sticky="nsew")
@@ -39,29 +41,35 @@ class CtkNavbar(ctk.CTkFrame):
         self.buttons_list = []
         self.frames_list = []
 
-    def add_page(self, button_text: str, btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None):
+    def add_page(self, button_text: str = "[BUTTON]", btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None):
         btn_id = len(self.buttons_list)
 
         if not btn:
             btn = DefaultSidebarButton(master=self.sidebar_frame,
                                        text=button_text,
                                        command=lambda: self._render(btn_id))
+        btn.configure(command=lambda: self._render(btn_id))
         if not frame:
             frame = DefaultNavbarFrame(master=self)
 
+        # if self._get_row_index_to_insert_new_button() is not None:
+        #     self.buttons_list.insert(self._get_row_index_to_insert_new_button(), btn)
+        #     self.frames_list.insert(self._get_row_index_to_insert_new_button(), frame)
+        # else:
         self.buttons_list.append(btn)
         self.frames_list.append(frame)
 
-        if self._auto_render:
+        if self._auto_render and self._is_it_already_rendered:
             self._render()
 
-    # def grid(self, **kwargs):
-    #     """
-    #     Render everything at the moment when the navigation block is added to the program
-    #     """
-    #     super().grid(**kwargs)
-    #     if self._auto_render:
-    #         self._render(btn_id=self._default_frame)
+    def grid(self, **kwargs):
+        """
+        Render everything at the moment when the navigation block is added to the program
+        """
+        super().grid(**kwargs)
+        if self._auto_render:
+            self._render(btn_id=self._active_page_id)
+            self._is_it_already_rendered = True
 
     def render(self):
         """
@@ -73,8 +81,8 @@ class CtkNavbar(ctk.CTkFrame):
         """
         Render all blocks
         """
-        _default_frame = self._default_frame if self._default_frame in range(len(self.buttons_list)) else 0
-        chosen_frame_id = btn_id if btn_id else _default_frame
+        if btn_id is not None:
+            self._active_page_id = btn_id
 
         # draw all buttons
         for i, btn in enumerate(self.buttons_list):
@@ -91,23 +99,32 @@ class CtkNavbar(ctk.CTkFrame):
 
         # set button color for selected button
         for i, btn in enumerate(self.buttons_list):
-            if i == chosen_frame_id:
+            if i == self._get_active_page_id():
                 btn.configure(fg_color=BTN_ACTIVE_COLOR)
             else:
                 btn.configure(fg_color="transparent")
 
         # draw_selected_frame
         for i, frame in enumerate(self.frames_list):
-            if i == chosen_frame_id:
+            if i == self._get_active_page_id():
                 frame.grid(row=0, column=1, sticky="nsew")
             else:
                 frame.grid_forget()
+        print("RENDER")
+
 
     def _get_row_index_for_align_btn_end(self) -> int:
         return 0 \
-            if (
-                len(self.buttons_list) - self._end_buttons_count < 0) \
+            if len(self.buttons_list) - self._end_buttons_count < 0 \
             else len(self.buttons_list) - self._end_buttons_count
+
+    def _get_row_index_to_insert_new_button(self) -> int | None:
+        return None \
+            if len(self.buttons_list) - self._end_buttons_count < 0 \
+            else len(self.buttons_list) - self._end_buttons_count
+
+    def _get_active_page_id(self):
+        return self._active_page_id if self._active_page_id in range(len(self.buttons_list)) else 0
 
 
 class DefaultSidebarButton(ctk.CTkButton):
