@@ -5,6 +5,28 @@ Simple customtkinter todo app
 |:-------------------------:|:-------------------------:|
 | ![alt](screenshots/1.png) | ![alt](screenshots/2.png) |
 
+# dev
+- [ ] add new task
+- [ ] delete task
+- [ ] change task
+- [ ] task storage
+- [ ] finish the task before (datetime)
+- [ ] task groups
+- [ ] add custom theme
+  - [ ] background image
+- [ ] settings
+  - [ ] appearance
+  - [ ] scaling
+  - [ ] load custom theme
+- [ ] calendar
+  - [ ] month calendar
+  - [ ] week calendar
+
+
+### The following modules for CustomTkinter were developed in the project
+- CtkNavbar
+
+
 ### Example of using CtkNavbar
 By default, a frame with a random color is added (helps to prototype your application). 
 You can pass your own frame to CtkNavbar.
@@ -48,6 +70,3 @@ nav.add_page(button_text="42")
 nav.render() # call render function once
 ```
 
-
-### The following modules for CustomTkinter were developed in the project
-- CtkNavbar
