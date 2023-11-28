@@ -15,6 +15,7 @@ Simple customtkinter todo app
 - [ ] task groups
 - [ ] add custom theme
   - [ ] background image
+  - [ ] create adwaita theme (gnome 45+)
 - [ ] settings
   - [ ] appearance
   - [ ] scaling
