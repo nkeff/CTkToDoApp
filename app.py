@@ -22,9 +22,9 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        nav = CtkNavbar(master=self, default_page=2, end_buttons_count=2)
+        nav = CtkNavbar(master=self, default_page=0, end_buttons_count=2)
         nav.add_page(button_text="Home")
-        nav.add_page()
+        nav.add_page(button_text="TEST")
         nav.add_page()
         nav.add_page(button_text="About")
 

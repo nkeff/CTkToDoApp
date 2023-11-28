@@ -11,21 +11,24 @@ SIDEBAR_BTN_PADDINGS = 6
 # TODO
 """
 2) add horizontal version
+3) fix button config
 """
 
 
 class CtkNavbar(ctk.CTkFrame):
     def __init__(self,
                  master,
-                 auto_render=True,
-                 end_buttons_count=0,
-                 default_page=0,
+                 auto_render: bool = True,
+                 end_buttons_count: int = 0,
+                 default_page: int = 0,
+                 button_config: dict = dict,
                  **kwargs):
         super().__init__(master, **kwargs)
 
         self._active_page_id = default_page
         self._auto_render = auto_render
         self._end_buttons_count = end_buttons_count
+        self._button_config = button_config  # todo fix buttons config
 
         self._is_it_already_rendered = False
 
@@ -111,7 +114,6 @@ class CtkNavbar(ctk.CTkFrame):
             else:
                 frame.grid_forget()
         print("RENDER")
-
 
     def _get_row_index_for_align_btn_end(self) -> int:
         return 0 \
