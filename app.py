@@ -1,8 +1,7 @@
-import os
 import customtkinter
 
-from core.ui.components.ctknavbar import CtkNavbar
 from core.settings import Settings
+from core.ui.components.ctknavbar import CtkNavbar
 
 PADDING = 20
 
@@ -30,11 +29,9 @@ class App(customtkinter.CTk):
 
         nav.grid(row=0, column=0, sticky="nsew")
 
-
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
     #     self.CONFIG.set("APPEARANCE", new_appearance_mode)
-
 
 
 if __name__ == "__main__":
