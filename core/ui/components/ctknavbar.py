@@ -43,7 +43,8 @@ class CtkNavbar(ctk.CTkFrame):
         self.buttons_list = []
         self.frames_list = []
 
-    def add_page(self, button_text: str = "[BUTTON]", btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None):
+    def add_page(self, button_text: str = "[BUTTON]", btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None)\
+            -> ctk.CTkFrame:
         btn_id = len(self.buttons_list)
 
         if not btn:
@@ -63,6 +64,8 @@ class CtkNavbar(ctk.CTkFrame):
 
         if self._auto_render and self._is_it_already_rendered:
             self._render()
+
+        return frame
 
     def grid(self, **kwargs):
         """
@@ -159,7 +162,7 @@ class DefaultNavbarFrame(ctk.CTkFrame):
 
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.grid_rowconfigure(0, weight=1)
+        # self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.configure(corner_radius=0, fg_color=self._get_random_color())

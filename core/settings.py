@@ -11,7 +11,7 @@ class Settings:
     ICON_NAME = "favicon.ico"
     DATA_DIR = 'data/'
 
-    GEOMETRY = f"{600}x{600}"
+    GEOMETRY = f"{1000}x{600}"
 
     @staticmethod
     def get_base_config():
