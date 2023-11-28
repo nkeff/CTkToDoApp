@@ -20,14 +20,15 @@ class CtkNavbar(ctk.CTkFrame):
                  auto_render: bool = True,
                  end_buttons_count: int = 0,
                  default_page: int = 0,
-                 button_config: dict = dict,
+                 label_text: str = None,
+                 label: ctk.CTkLabel = None,
                  **kwargs):
         super().__init__(master, **kwargs)
 
         self._active_page_id = default_page
         self._auto_render = auto_render
         self._end_buttons_count = end_buttons_count
-        self._button_config = button_config  # todo fix buttons config
+        self._label_text, self._label = label_text, label
 
         self._is_it_already_rendered = False
 
@@ -42,6 +43,10 @@ class CtkNavbar(ctk.CTkFrame):
 
         self.buttons_list = []
         self.frames_list = []
+
+        if self._get_label() is not None:
+            label = self._get_label()
+            label.grid(row=0, column=0, padx=SIDEBAR_BTN_PADDINGS, pady=SIDEBAR_BTN_PADDINGS*4, sticky="nsew")
 
     def add_page(self, button_text: str = "[BUTTON]", btn: ctk.CTkButton = None, frame: ctk.CTkFrame = None)\
             -> ctk.CTkFrame:
@@ -91,16 +96,16 @@ class CtkNavbar(ctk.CTkFrame):
 
         # draw all buttons
         for i, btn in enumerate(self.buttons_list):
-            btn.grid(row=i,
+            btn.grid(row=self._i(i),
                      column=0,
                      padx=SIDEBAR_BTN_PADDINGS,
-                     pady=SIDEBAR_BTN_PADDINGS if i == 0 else (0, SIDEBAR_BTN_PADDINGS), sticky="sew")
+                     pady=SIDEBAR_BTN_PADDINGS if self._i(i) == 0 else (0, SIDEBAR_BTN_PADDINGS), sticky="sew")
 
             # stick the buttons to the end
             if i == self._get_row_index_for_align_btn_end():
-                self.sidebar_frame.grid_rowconfigure(self._get_row_index_for_align_btn_end(), weight=1)
+                self.sidebar_frame.grid_rowconfigure(self._i(self._get_row_index_for_align_btn_end()), weight=1)
             else:
-                self.sidebar_frame.grid_rowconfigure(i, weight=0)
+                self.sidebar_frame.grid_rowconfigure(self._i(i), weight=0)
 
         # set button color for selected button
         for i, btn in enumerate(self.buttons_list):
@@ -129,6 +134,20 @@ class CtkNavbar(ctk.CTkFrame):
 
     def _get_active_page_id(self):
         return self._active_page_id if self._active_page_id in range(len(self.buttons_list)) else 0
+
+    def _get_label(self) -> ctk.CTkLabel | None:
+        if self._label is None and self._label_text is None:
+            return None
+
+        label = DefaultNavbarLabel(master=self.sidebar_frame, text=self._label_text) \
+            if self._label is None \
+            else self._label
+        return label
+
+    def _i(self, i):
+        if self._label is None and self._label_text is None:
+            return i
+        return i+1
 
 
 class DefaultSidebarButton(ctk.CTkButton):
@@ -170,3 +189,15 @@ class DefaultNavbarFrame(ctk.CTkFrame):
     @staticmethod
     def _get_random_color() -> str:
         return f"#{''.join([random.choice("123456789ABCDEF") for _ in range(6)])}"
+
+
+class DefaultNavbarLabel(ctk.CTkLabel):
+    """
+
+    """
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.configure(corner_radius=0,
+                       fg_color="transparent",
+                       font=ctk.CTkFont(size=20, weight="bold"))

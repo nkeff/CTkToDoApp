@@ -24,7 +24,7 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        nav = CtkNavbar(master=self, default_page=0, end_buttons_count=1)
+        nav = CtkNavbar(master=self, default_page=0, end_buttons_count=1, label_text="Todo App")
         self.todo_page = nav.add_page(button_text="[ To Do ]")
         self.done_page = nav.add_page(button_text="[Already Done]")
         self.settings_page = nav.add_page(button_text="Settings")
