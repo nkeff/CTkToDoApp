@@ -27,7 +27,7 @@ class ToDoFrame(ctk.CTkFrame):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        self.todopage = ctk.CTkScrollableFrame(master=self, fg_color="green")
+        self.todopage = ctk.CTkScrollableFrame(master=self, fg_color="gray12")
 
         self.todopage.grid_columnconfigure(0, weight=1)
         self.todopage.grid(row=0, column=0, columnspan=2, sticky="nsew")
