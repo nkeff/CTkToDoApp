@@ -34,7 +34,7 @@ class ToDoFrame(ctk.CTkFrame):
 
         self.title_input = ctk.CTkEntry(master=self)
         self.text_input = ctk.CTkEntry(master=self)
-        self.add_button = ctk.CTkButton(master=self)
+        self.add_button = ctk.CTkButton(master=self, text="Add Task")
 
         self.title_input.grid(row=1, column=0, sticky="nsew")
         self.text_input.grid(row=1, column=1, sticky="nsew")
