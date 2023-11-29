@@ -2,7 +2,6 @@ import customtkinter
 
 from core.settings import Settings
 from core.ui.components.ctknavbar import CtkNavbar
-from core.ui.components.task_unit import TaskUnit
 
 from core.utils.todo import Task, ToDo
 
@@ -30,14 +29,15 @@ class App(customtkinter.CTk):
         self.settings_page = nav.add_page(button_text="Settings")
         nav.grid(row=0, column=0, sticky="nsew")
 
-        t1 = Task(title="First task", text="some description about first task")
-        t2 = Task(title="Second task", text="some description about second task")
+        todo = ToDo()
+        todo.new_task(title="Task 1", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo.new_task(title="Task 2", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo.new_task(title="Task 3", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo.new_task(title="Task 4", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo.new_task(title="Task 5", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo.new_task(title="Task 6", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
 
-        task1 = TaskUnit(self.todo_page, task=t1)
-        task2 = TaskUnit(self.todo_page, task=t2)
-
-        task1.grid(row=0, column=0, padx=PADDING, pady=(PADDING, 0), sticky="new")
-        task2.grid(row=1, column=0, padx=PADDING, pady=(PADDING, 0), sticky="new")
+        todo.pack_tasks_at_frame(frame=self.todo_page)
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
