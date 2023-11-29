@@ -23,8 +23,7 @@ class ToDo:
         self._task_list: list[Task] = []
 
     def new_task(self, title: str, text: str):
-        task_id = self._get_new_task_id()
-        new_task = Task(id=task_id, title=title, text=text)
+        new_task = Task(id=self._get_new_task_id(), title=title, text=text)
         self._task_list.append(new_task)
 
     def add_task(self, task: Task):
@@ -37,6 +36,22 @@ class ToDo:
 
     def get_all_tasks(self) -> list[Task]:
         return self._task_list
+
+    def update_task(self, _task: Task):
+        index = None
+        for i, task in self._task_list:
+            if _task.id == task.id:
+                index = i
+
+        if index is not None:
+            self._task_list.insert(index, _task)
+
+    def _render(self):
+        """
+        todo - create a common render function
+        :return:
+        """
+        pass
 
     def pack_tasks_at_frame(self, frame, _already_done: bool = None):
         if _already_done is not None:
@@ -70,8 +85,13 @@ class TaskUnit(ctk.CTkFrame):
                                corner_radius=10)
         self.title = ctk.CTkLabel(master=self, text=self._task.title, anchor='w')
         self.text = ctk.CTkLabel(master=self, text=self._task.text, anchor='w')
+
+        self.checkbox_var = ctk.StringVar(value="on" if self._task.already_done else "off")
         self.checkbox = ctk.CTkCheckBox(master=self,
                                         text='',
+                                        variable=self.checkbox_var,
+                                        onvalue="on", offvalue="off",
+                                        command=self._checkbox_event,
                                         width=0,
                                         height=50,
                                         checkbox_width=27,
@@ -84,3 +104,7 @@ class TaskUnit(ctk.CTkFrame):
         self.title.grid(row=0, column=1, padx=0, pady=(TASK_UNIT_PAD, 0), sticky="nsew")
         self.text.grid(row=1, column=1, padx=0, pady=(0, TASK_UNIT_PAD), sticky="nsew")
         self.checkbox.grid(row=0, column=2, rowspan=2, padx=TASK_UNIT_PAD, pady=TASK_UNIT_PAD, sticky="nse")
+
+    def _checkbox_event(self):
+        print(self.checkbox_var.get(), self._task.id)
+

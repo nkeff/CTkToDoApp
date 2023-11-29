@@ -37,7 +37,7 @@ class App(customtkinter.CTk):
         todo.new_task(title="Task 5", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
         todo.new_task(title="Task 6", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
 
-        todo.pack_tasks_at_frame(frame=self.todo_page)
+        todo.pack_tasks_at_frame(frame=self.todo_page, _already_done=False)
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)
