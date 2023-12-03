@@ -188,7 +188,7 @@ class DefaultNavbarFrame(ctk.CTkFrame):
 
     @staticmethod
     def _get_random_color() -> str:
-        return f"#{''.join([random.choice("123456789ABCDEF") for _ in range(6)])}"
+        return f"#{''.join([random.choice('123456789ABCDEF') for _ in range(6)])}"
 
 
 class DefaultNavbarLabel(ctk.CTkLabel):
