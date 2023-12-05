@@ -26,21 +26,16 @@ class App(customtkinter.CTk):
 
         nav = CtkNavbar(master=self, default_page=0, end_buttons_count=1, label_text="Todo App")
 
-        page = core.utils.todo.ToDoFrame(master=nav)
-        self.todo_page = nav.add_page(button_text="[ To Do ]", frame=page)
-        self.done_page = nav.add_page(button_text="[Already Done]")
+        todo_page = core.utils.todo.ToDoFrame(master=nav)
+        self.todo_page = nav.add_page(button_text="[ To Do ]", frame=todo_page)
+
+        done_page = core.utils.todo.ToDoFrame(master=nav)
+        self.done_page = nav.add_page(button_text="[Already Done]", frame=done_page)
         self.settings_page = nav.add_page(button_text="Settings")
         nav.grid(row=0, column=0, sticky="nsew")
 
-        todo = ToDo(frame=self.todo_page)
-        todo.new_task(title="Task 1", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
-        todo.new_task(title="Task 2", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
-        todo.new_task(title="Task 3", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
-        todo.new_task(title="Task 4", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
-        todo.new_task(title="Task 5", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
-        todo.new_task(title="Task 6", text="lskjdfalskdhfsadfsakjdflkjsadhflkhsadfkjhsadf")
+        todo = ToDo(frame=self.todo_page, done_frame=done_page)
 
-        todo.pack_tasks_at_frame(_already_done=False)
 
     # def change_appearance_mode_event(self, new_appearance_mode: str):
     #     customtkinter.set_appearance_mode(new_appearance_mode)

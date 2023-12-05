@@ -1,21 +1,11 @@
 import customtkinter as ctk
-from dataclasses import dataclass
-from datetime import datetime
+from core.utils.storage import Storage, Task
+from core.settings import Settings
 
 TASK_UNIT_PAD = 10
 HIGHLIGHTED_COLOR = ("gray75", "gray25")
 HIGHLIGHTED_HOVER_COLOR = ("gray70", "gray30")
 PADDING = 7
-
-
-@dataclass
-class Task:
-    title: str
-    text: str
-    id: int
-    already_done: bool = False
-    importance_level: int = 0
-    created_at: datetime = datetime.today()
 
 
 class ToDoFrame(ctk.CTkFrame):
@@ -24,35 +14,61 @@ class ToDoFrame(ctk.CTkFrame):
                  **kwargs):
         super().__init__(master, **kwargs)
 
+        self.ADD_TASK_COMMAND = None
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        self.todopage = ctk.CTkScrollableFrame(master=self, fg_color="gray12")
+        self.todopage = ctk.CTkScrollableFrame(master=self,
+                                               fg_color=Settings.COLOR_WINDOW_BG,
+                                               corner_radius=0)
 
         self.todopage.grid_columnconfigure(0, weight=1)
         self.todopage.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
-        self.title_input = ctk.CTkEntry(master=self)
-        self.text_input = ctk.CTkEntry(master=self)
-        self.add_button = ctk.CTkButton(master=self, text="Add Task")
+        self.title_input = ctk.CTkEntry(master=self,
+                                        placeholder_text="Task title",
+                                        height=40,
+                                        width=300)
+        self.text_input = ctk.CTkEntry(master=self,
+                                       placeholder_text="Task description",
+                                       height=40)
+        self.add_button = ctk.CTkButton(master=self,
+                                        text="Add Task",
+                                        height=40,
+                                        corner_radius=10,
+                                        command=self.add_new_task_callback)
 
-        self.title_input.grid(row=1, column=0, sticky="nsew")
-        self.text_input.grid(row=1, column=1, sticky="nsew")
-        self.add_button.grid(row=2, column=0, columnspan=2, sticky="nsew")
+        self.title_input.grid(row=1, column=0, padx=(PADDING, 0), pady=(PADDING, 0), sticky="nsew")
+        self.text_input.grid(row=1, column=1, padx=PADDING, pady=(PADDING, 0), sticky="nsew")
+        self.add_button.grid(row=2, column=0, padx=PADDING, pady=PADDING, columnspan=2, sticky="nsew")
+
+    def add_new_task_callback(self):
+        title = self.title_input.get()
+        text = self.text_input.get()
+        if title and text:
+            self.ADD_TASK_COMMAND(title, text)
+            self.text_input.delete(0, len(text))
+            self.title_input.delete(0, len(title))
 
 
 class ToDo:
-    def __init__(self, frame):
-        self._task_list: list[Task] = []
+    def __init__(self, frame, done_frame):
+        self._task_list: list[Task] = Storage.load()
         self._already_done_task_list: list[Task] = []
-        self._frame = frame
+        self._frame: ToDoFrame = frame
+        self._done_frame: ToDoFrame = done_frame
+        self._task_units: list[TaskUnit] = []
+
+        self._frame.ADD_TASK_COMMAND = self.new_task
+        self._done_frame.ADD_TASK_COMMAND = self.new_task
+        self._render()
 
     def new_task(self, title: str, text: str):
         new_task = Task(id=self._get_new_task_id(), title=title, text=text)
         self._task_list.append(new_task)
-
-    def add_task(self, task: Task):
-        self._task_list.append(task)
+        Storage.save(self._task_list)
+        self._render()
 
     def get_task_index(self, task: Task) -> int | None:
         for i, task_i in enumerate(self._task_list):
@@ -71,33 +87,46 @@ class ToDo:
 
         if index is not None:
             self._task_list.insert(index, _task)
+        Storage.save(self._task_list)
+        self._render()
 
     def _render(self):
         """
         todo - create a common render function
         :return:
         """
-        pass
+        # clear_all
+        for i in self._task_units:
+            i.grid_forget()
 
-    def pack_tasks_at_frame(self, _already_done: bool = None):
-        if _already_done is not None:
-            task_list: list[Task] = [i for i in self._task_list if i.already_done == _already_done]
-        else:
-            task_list: list[Task] = self._task_list
-        task_list = sorted(task_list, key=lambda x: x.already_done)
-        for i, task_unit in enumerate(
-                [TaskUnit(master=self._frame.todopage,
-                          task=task_i,
-                          _checkbox_callback=self._checkbox_callback)
-                 for task_i in task_list]):
-            task_unit.grid(row=i, column=0, padx=PADDING, pady=(PADDING, 0), sticky="new")
+        # pack all TaskUnits
+        todo_index, done_index = 0, 0
+        for task in self._task_list:
+            task_unit = TaskUnit(master=self._frame.todopage if not task.already_done else self._done_frame.todopage,
+                                 task=task,
+                                 _checkbox_callback=self._checkbox_callback)
+            task_unit.grid(row=todo_index if not task.already_done else done_index,
+                           column=0,
+                           padx=PADDING,
+                           pady=(PADDING, 0),
+                           sticky="new")
+            if not task.already_done:
+                todo_index += 1
+            else:
+                done_index += 1
+
+            self._task_units.append(task_unit)
+
+    def render(self):
+        self._render()
 
     def _get_new_task_id(self) -> int:
         return max([i.id for i in self._task_list]) + 1 if self._task_list else 0
 
     def _checkbox_callback(self, task: Task):
         self._task_list[self.get_task_index(task)] = task
-        self.pack_tasks_at_frame()
+        Storage.save(self._task_list)
+        self._render()
 
 
 class TaskUnit(ctk.CTkFrame):

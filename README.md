@@ -6,11 +6,12 @@ Simple customtkinter todo app
 | ![alt](screenshots/1.png) | ![alt](screenshots/2.png) |
 
 # dev
+- [x] build app with pyinstaller
 - [x] add logo in CktNavbar
-- [ ] add new task
+- [x] add new task
 - [ ] delete task
 - [ ] change task
-- [ ] task storage
+- [x] task storage
 - [ ] finish the task before (datetime)
 - [ ] task groups
 - [ ] add custom theme
@@ -24,6 +25,45 @@ Simple customtkinter todo app
   - [ ] month calendar
   - [ ] week calendar
 
+## Build and run app
+
+Linux ->
+```
+python -m venv env 
+source ./env/bin/activate.fish 
+pip install --upgrade pip 
+pip install -r requirements.txt
+```
+
+
+Windows CMD ->
+```
+python -m venv env
+.\env\Scripts\Activate.bat
+python -m pip install --upgrade pip 
+python -m pip install -r requirements.txt
+```
+Windows PowerShell ->
+```
+python -m venv env
+.\env\Scripts\Activate.ps1
+python -m pip install --upgrade pip 
+python -m pip install -r requirements.txt
+
+--- if it is no work
+--- open PS with administrator rules and run 
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned 
+```
+
+## Run
+``` bash
+python app.py
+```
+
+## Build
+``` bash
+python build.py
+```
 
 ### The following modules for CustomTkinter were developed in the project
 - CtkNavbar
