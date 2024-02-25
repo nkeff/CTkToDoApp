@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ctktodoapp"
+version = "0.1.0"
+description = "Simple ToDo App made with customtkinter"
+authors = ["nkeff"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+customtkinter = "^5.2.2"
+ctkgridlayout = {url = "https://github.com/nkeff/CTkGridLayout/releases/download/v.0.1.0/ctkgridlayout-0.1.0-py3-none-any.whl"}
+ctknavbar = {url = "https://github.com/nkeff/CTkNavbar/releases/download/v.0.1.0/ctknavbar-0.1.0-py3-none-any.whl"}
+orjson = "^3.9.15"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
